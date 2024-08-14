@@ -10,15 +10,15 @@ A simple and intuitive Todo List app built with Flutter.
 * Edit existing tasks
 
 ## Screenshots
-![Alt text](https://github.com/OracleMatrix/blogclub/blob/main/Screenshot_1723662047.png?raw=true "Optional Title")
+![Alt text](https://github.com/OracleMatrix/todo_list_app/blob/main/Screenshot_1723662047.png?raw=true "Optional Title")
 
-![Alt text](https://github.com/OracleMatrix/blogclub/blob/main/Screenshot_1723662571.png?raw=true "Optional Title")
+![Alt text](https://github.com/OracleMatrix/todo_list_app/blob/main/Screenshot_1723662199.png?raw=true "Optional Title")
 
-![Alt text](https://github.com/OracleMatrix/blogclub/blob/main/Screenshot_1723662199.png?raw=true "Optional Title")
+![Alt text](https://github.com/OracleMatrix/todo_list_app/blob/main/Screenshot_1723662571.png?raw=true "Optional Title")
 
-![Alt text](https://github.com/OracleMatrix/blogclub/blob/main/Screenshot_1723662225.png?raw=true "Optional Title")
+![Alt text](https://github.com/OracleMatrix/todo_list_app/blob/main/Screenshot_1723662225.png?raw=true "Optional Title")
 
-![Alt text](https://github.com/OracleMatrix/blogclub/blob/main/Screenshot_1723662607.png?raw=true "Optional Title")
+![Alt text](https://github.com/OracleMatrix/todo_list_app/blob/main/Screenshot_1723662607.png?raw=true "Optional Title")
 
 ## Technical Details
 * Built with Flutter 2.x
