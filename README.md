@@ -27,7 +27,7 @@ Uses Hive for local storage
 * Utilizes Flutter's Material Design for a native Android and iOS look and feel
 
 ## Getting Started
-1. Clone the repository: git clone https://github.com/OracleMatrix/todo-list-app.git
+1. Clone the repository: git clone https://github.com/OracleMatrix/todo_list_app.git
 2. Open the project in your preferred IDE (e.g. Android Studio, Visual Studio Code)
 3. Run the app on an emulator or physical device: flutter run
 
