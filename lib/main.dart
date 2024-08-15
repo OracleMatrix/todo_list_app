@@ -9,14 +9,14 @@ import 'package:todo_list/edit.screen.dart';
 
 const taskBoxName = "tasks";
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
-  Hive.registerAdapter(TaskAdapter());
+  Hive.registerAdapter(TaskEntityAdapter());
   Hive.registerAdapter(PriorityAdapter());
   await Hive.openBox<TaskEntity>(taskBoxName);
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(statusBarColor: primaryVariant),
   );
+  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
     [
       DeviceOrientation.portraitUp,
@@ -402,6 +402,7 @@ class _TaskItemState extends State<TaskItem> {
               onTap: () {
                 setState(() {
                   widget.task.isCompleted = !widget.task.isCompleted;
+                  widget.task.save();
                 });
               },
             ),
