@@ -46,7 +46,7 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                       fontSizeFactor: 1.2,
                     ),
               ),
-            )
+            ),
           ],
         ),
       ),
