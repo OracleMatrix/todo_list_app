@@ -22,7 +22,7 @@ A simple and intuitive Todo List app built with Flutter.
 
 ## Technical Details
 * Built with Flutter 2.x
-Uses Hive for local storage
+* Uses Hive for local storage
 * Implements a simple and efficient data model using HiveObject and * HiveType
 * Utilizes Flutter's Material Design for a native Android and iOS look and feel
 
@@ -33,6 +33,3 @@ Uses Hive for local storage
 
 ## Contributing
 Contributions are welcome! If you'd like to contribute to the app, please fork the repository and submit a pull request.
-
-## License
-This project is licensed under the MIT License. See LICENSE for details.

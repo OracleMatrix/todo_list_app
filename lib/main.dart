@@ -49,7 +49,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: false,
         colorScheme: _colorScheme(primaryTextColor),
       ),
-      home: HomeScreen(),
+      home: const HomeScreen(),
     );
   }
 
@@ -86,11 +86,19 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class HomeScreen extends StatelessWidget {
-  final TextEditingController controller = TextEditingController();
-  final ValueNotifier<String> searchKeyWordNotifire = ValueNotifier("");
+bool selectAll = false;
 
-  HomeScreen({super.key});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  final TextEditingController controller = TextEditingController();
+
+  final ValueNotifier<String> searchKeyWordNotifire = ValueNotifier("");
 
   @override
   Widget build(BuildContext context) {
@@ -154,6 +162,68 @@ class HomeScreen extends StatelessWidget {
                                 ),
                               )
                             ],
+                          ),
+                          MaterialButton(
+                            elevation: 0,
+                            textColor: secondaryTextColor,
+                            color: const Color(0xffEAEFF5),
+                            onPressed: () {
+                              showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    content: const Text(
+                                      "Are you sure you want to select all of the tasks?!",
+                                    ),
+                                    title: Text(
+                                      selectAll ? "Unselect all" : "Select all",
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            selectAll = !selectAll;
+                                            if (selectAll) {
+                                              for (var task in box.values) {
+                                                task.isCompleted = true;
+                                                task.save(); // Add this line to save the task
+                                              }
+                                            } else {
+                                              for (var task in box.values) {
+                                                task.isCompleted = false;
+                                                task.save(); // Add this line to save the task
+                                              }
+                                            }
+                                          });
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("Yes"),
+                                      ),
+                                      TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: const Text("Cancel"),
+                                      ),
+                                    ],
+                                  );
+                                },
+                              );
+                            },
+                            child: Row(
+                              children: [
+                                Text(
+                                  selectAll ? "Unselect all" : "Select all",
+                                ),
+                                const SizedBox(
+                                  width: 4,
+                                ),
+                                const Icon(
+                                  CupertinoIcons.check_mark,
+                                  size: 18,
+                                )
+                              ],
+                            ),
                           ),
                           MaterialButton(
                             elevation: 0,
@@ -343,8 +413,8 @@ class _TaskItemState extends State<TaskItem> {
         break;
     }
     return InkWell(
-      onLongPress: () {
-        showDialog(
+      onLongPress: () async {
+        await showDialog(
           context: context,
           builder: (context) {
             return AlertDialog(
@@ -381,57 +451,180 @@ class _TaskItemState extends State<TaskItem> {
           ),
         );
       },
-      child: Container(
-        margin: const EdgeInsets.only(top: 8),
-        padding: const EdgeInsets.only(left: 16),
-        height: TaskItem.height,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(TaskItem.borderRadius),
-          color: themeData.colorScheme.surface,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 20,
-              color: Colors.black.withOpacity(0.15),
+      child: Dismissible(
+        confirmDismiss: (direction) async {
+          return await showDialog(
+            context: context,
+            builder: (context) {
+              if (direction == DismissDirection.endToStart) {
+                return AlertDialog(
+                  content: const Text(
+                    "Are you sure you want to delete the task?!",
+                  ),
+                  title: const Text("Delete task"),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(true);
+                      },
+                      child: const Text("Yes"),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: const Text(
+                        "No",
+                      ),
+                    )
+                  ],
+                );
+              } else {
+                return AlertDialog(
+                  content: Text(
+                    widget.task.isCompleted
+                        ? "Are you sure you want to mark this task as not completed?"
+                        : "Are you sure you want to mark this task as completed?",
+                  ),
+                  title: Text(widget.task.isCompleted
+                      ? "Set as not completed"
+                      : "Set as Done"),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          widget.task.isCompleted = !widget.task.isCompleted;
+                          widget.task.save();
+                          if (selectAll == false &&
+                              widget.task.isCompleted == true) {
+                            selectAll = true;
+                          } else if (widget.task.isCompleted == false) {
+                            selectAll = false;
+                          }
+                        });
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("Yes"),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop(false);
+                      },
+                      child: const Text(
+                        "No",
+                      ),
+                    )
+                  ],
+                );
+              }
+            },
+          );
+        },
+        onDismissed: (direction) {
+          if (direction == DismissDirection.endToStart) {
+            widget.task.delete();
+          } else {
+            setState(() {
+              widget.task.isCompleted = !widget.task.isCompleted;
+              widget.task.save();
+            });
+          }
+        },
+        key: Key(widget.task.name),
+        secondaryBackground: const Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Icon(
+              Icons.delete,
+              color: Colors.red,
+            ),
+            SizedBox(
+              width: 5,
+            ),
+            Text(
+              "Delete",
+              style: TextStyle(
+                color: Colors.red,
+              ),
             ),
           ],
         ),
-        child: Row(
+        background: Row(
           children: [
-            MyCheckBox(
-              value: widget.task.isCompleted,
-              onTap: () {
-                setState(() {
-                  widget.task.isCompleted = !widget.task.isCompleted;
-                  widget.task.save();
-                });
-              },
+            Icon(
+              widget.task.isCompleted ? Icons.cancel_outlined : Icons.check,
+              color: Colors.green,
             ),
             const SizedBox(
-              width: 16,
+              width: 5,
             ),
-            Expanded(
-              child: Text(
-                widget.task.name,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                  decoration: widget.task.isCompleted
-                      ? TextDecoration.lineThrough
-                      : null,
+            Text(
+              widget.task.isCompleted ? "Set as not complete" : "Set as done",
+              style: const TextStyle(color: Colors.green),
+            ),
+          ],
+        ),
+        child: Container(
+          margin: const EdgeInsets.only(top: 8),
+          padding: const EdgeInsets.only(left: 16),
+          height: TaskItem.height,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(TaskItem.borderRadius),
+            color: themeData.colorScheme.surface,
+            boxShadow: [
+              BoxShadow(
+                blurRadius: 20,
+                color: Colors.black.withOpacity(0.15),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+              MyCheckBox(
+                value: widget.task.isCompleted,
+                onTap: () {
+                  setState(() {
+                    setState(() {
+                      widget.task.isCompleted = !widget.task.isCompleted;
+                      widget.task.save();
+                      if (selectAll == false &&
+                          widget.task.isCompleted == true) {
+                        selectAll = true;
+                      } else if (widget.task.isCompleted == false) {
+                        selectAll = false;
+                      }
+                    });
+                  });
+                },
+              ),
+              const SizedBox(
+                width: 16,
+              ),
+              Expanded(
+                child: Text(
+                  widget.task.name,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    decoration: widget.task.isCompleted
+                        ? TextDecoration.lineThrough
+                        : null,
+                  ),
                 ),
               ),
-            ),
-            Container(
-              width: 20,
-              height: TaskItem.height,
-              decoration: BoxDecoration(
-                color: priorityColor,
-                borderRadius: const BorderRadius.only(
+              Container(
+                width: 20,
+                height: TaskItem.height,
+                decoration: BoxDecoration(
+                  color: priorityColor,
+                  borderRadius: const BorderRadius.only(
                     topRight: Radius.circular(TaskItem.borderRadius),
-                    bottomRight: Radius.circular(TaskItem.borderRadius)),
+                    bottomRight: Radius.circular(TaskItem.borderRadius),
+                  ),
+                ),
               ),
-            )
-          ],
+            ],
+          ),
         ),
       ),
     );
