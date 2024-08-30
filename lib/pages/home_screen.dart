@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_list/components/task_items.dart';
 import 'package:todo_list/database/data.dart';
 import 'package:todo_list/main.dart';
@@ -16,6 +17,24 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController controller = TextEditingController();
+
+  saveData() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.setBool("selectAllButton", selectAll);
+  }
+
+  loadData() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      selectAll = preferences.getBool("selectAllButton") ?? false;
+    });
+  }
+
+  @override
+  void initState() {
+    loadData();
+    super.initState();
+  }
 
   final ValueNotifier<String> searchKeyWordNotifire = ValueNotifier("");
 
@@ -174,6 +193,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   onPressed: () {
                     setState(() {
                       selectAll = !selectAll;
+                      saveData();
                       if (selectAll) {
                         for (var task in box.values) {
                           task.isCompleted = true;
