@@ -4,6 +4,7 @@ A simple and intuitive Todo List app built with Flutter.
 ## Features
 * Create and manage your todo tasks
 * Prioritize tasks with high, normal, and low priority levels
+* Hive and SharedPrefrences database to store tasks and states
 * Mark tasks as completed
 * Search for tasks by name
 * Delete individual tasks or all tasks at once
