@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_list/components/check_box.dart';
 import 'package:todo_list/database/data.dart';
 import 'package:todo_list/main.dart';
@@ -19,6 +20,18 @@ class TaskItem extends StatefulWidget {
 }
 
 class _TaskItemState extends State<TaskItem> {
+  saveData() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    await preferences.setBool("selectAllButton", selectAll);
+  }
+
+  loadData() async {
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    setState(() {
+      selectAll = preferences.getBool("selectAllButton") ?? false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
@@ -122,15 +135,14 @@ class _TaskItemState extends State<TaskItem> {
             value: widget.task.isCompleted,
             onTap: () {
               setState(() {
-                setState(() {
-                  widget.task.isCompleted = !widget.task.isCompleted;
-                  widget.task.save();
-                  if (selectAll == false && widget.task.isCompleted == true) {
-                    selectAll = true;
-                  } else if (widget.task.isCompleted == false) {
-                    selectAll = false;
-                  }
-                });
+                saveData();
+                widget.task.isCompleted = !widget.task.isCompleted;
+                widget.task.save();
+                if (selectAll == false && widget.task.isCompleted == true) {
+                  selectAll = true;
+                } else if (widget.task.isCompleted == false) {
+                  selectAll = false;
+                }
               });
             },
           ),
@@ -206,6 +218,7 @@ class _TaskItemState extends State<TaskItem> {
               TextButton(
                 onPressed: () {
                   setState(() {
+                    saveData();
                     widget.task.isCompleted = !widget.task.isCompleted;
                     widget.task.save();
                     if (selectAll == false && widget.task.isCompleted == true) {
