@@ -12,6 +12,10 @@ A simple and intuitive Todo List app built with Flutter.
 ## Screenshots
 ![alt text](Screenshot_1725009021.png)
 
+![alt text](Screenshot_1725009333.png)
+
+![alt text](Screenshot_1725009339.png)
+
 ![Alt text](https://github.com/OracleMatrix/todo_list_app/blob/main/Screenshot_1723662047.png?raw=true "Optional Title")
 
 ![Alt text](https://github.com/OracleMatrix/todo_list_app/blob/main/Screenshot_1723662571.png?raw=true "Optional Title")
