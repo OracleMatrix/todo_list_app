@@ -7,7 +7,12 @@ A simple and intuitive Todo List app built with Flutter.
 * Mark tasks as completed
 * Search for tasks by name
 * Delete individual tasks or all tasks at once
+* Select all or Unselect all tasks at once
+* Swipe right to set as done or set as uncomplete task
+* Swipe left to delete the task
+* Hold on tasks to delete
 * Edit existing tasks
+* Empty state
 
 ## Screenshots
 ![alt text](Screenshot_1725009021.png)
