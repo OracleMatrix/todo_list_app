@@ -10,9 +10,10 @@ A simple and intuitive Todo List app built with Flutter.
 * Edit existing tasks
 
 ## Screenshots
-![Alt text](https://github.com/OracleMatrix/todo_list_app/blob/main/Screenshot_1723662047.png?raw=true "Optional Title")
+![alt text](Screenshot_1725009021.png)
+![Alt text](https://github.com/OracleMatrix/todo_list_app/blob/main/Screenshot_1725009021.png?raw=true "Optional Title")
 
-![Alt text](https://github.com/OracleMatrix/todo_list_app/blob/main/Screenshot_1723662199.png?raw=true "Optional Title")
+![Alt text](https://github.com/OracleMatrix/todo_list_app/blob/main/Screenshot_1723662047.png?raw=true "Optional Title")
 
 ![Alt text](https://github.com/OracleMatrix/todo_list_app/blob/main/Screenshot_1723662571.png?raw=true "Optional Title")
 
