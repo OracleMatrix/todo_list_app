@@ -7,6 +7,7 @@ import 'package:todo_list/pages/home_screen.dart';
 
 const taskBoxName = "tasks";
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Hive.initFlutter();
   Hive.registerAdapter(TaskEntityAdapter());
   Hive.registerAdapter(PriorityAdapter());
