@@ -1,10 +1,11 @@
 # Todo List App
-A simple and intuitive Todo List app built with Flutter.
+A simple and pretty Todo List app built with Flutter.
 
 ## Features
 * Create and manage your todo tasks
 * Prioritize tasks with high, normal, and low priority levels
 * Hive and SharedPrefrences database to store tasks and states
+* Scheduled Notification
 * Mark tasks as completed
 * Search for tasks by name
 * Delete individual tasks or all tasks at once
@@ -16,23 +17,30 @@ A simple and intuitive Todo List app built with Flutter.
 * Empty state
 
 ## Screenshots
-![alt text](Screenshot_1725009021.png)
+![alt text](Screenshot_1723662047.png)
 
-![alt text](Screenshot_1725009333.png)
+![alt text](Screenshot_1725635061.png)
 
-![alt text](Screenshot_1725009339.png)
+![alt text](Screenshot_1725635078.png)
 
-![Alt text](https://github.com/OracleMatrix/todo_list_app/blob/main/Screenshot_1723662047.png?raw=true "Optional Title")
+![alt text](Screenshot_1725635124.png)
 
-![Alt text](https://github.com/OracleMatrix/todo_list_app/blob/main/Screenshot_1723662571.png?raw=true "Optional Title")
+![alt text](Screenshot_1725635163.png)
 
-![Alt text](https://github.com/OracleMatrix/todo_list_app/blob/main/Screenshot_1723662225.png?raw=true "Optional Title")
+![alt text](Screenshot_1725634832.png)
 
-![Alt text](https://github.com/OracleMatrix/todo_list_app/blob/main/Screenshot_1723662607.png?raw=true "Optional Title")
+![alt text](Screenshot_1725635211.png)
+
+![alt text](Screenshot_1725635213.png)
+
+
+
+
 
 ## Technical Details
 * Built with Flutter 2.x
 * Uses Hive for local storage
+* Uses Awesome Notifications for sendid local notifications
 * Implements a simple and efficient data model using HiveObject and * HiveType
 * Utilizes Flutter's Material Design for a native Android and iOS look and feel
 
