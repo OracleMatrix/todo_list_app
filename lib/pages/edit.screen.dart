@@ -192,7 +192,11 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
               channelKey: 'scheduled_channel',
               title: widget.task.name,
               body: widget.task.description,
+              wakeUpScreen: true,
               notificationLayout: NotificationLayout.BigText,
+              color: Colors.deepPurpleAccent,
+              backgroundColor: Colors.deepPurpleAccent,
+              actionType: ActionType.KeepOnTop,
             ),
             schedule: NotificationCalendar(
               allowWhileIdle: true,
@@ -208,6 +212,13 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
               .then(
             (value) {
               if (value) {
+                widget.task.notificationTime = DateTime(
+                  selectedDate.year,
+                  selectedDate.month,
+                  selectedDate.day,
+                  selectedTime.hour,
+                  selectedTime.minute,
+                );
                 widget.task.notificationId = notificationId;
                 if (widget.task.isInBox) {
                   widget.task.save();
@@ -216,6 +227,13 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                   box.add(widget.task);
                 }
               } else {
+                widget.task.notificationTime = DateTime(
+                  selectedDate.year,
+                  selectedDate.month,
+                  selectedDate.day,
+                  selectedTime.hour,
+                  selectedTime.minute,
+                );
                 widget.task.notificationId = notificationId;
                 if (widget.task.isInBox) {
                   widget.task.save();
