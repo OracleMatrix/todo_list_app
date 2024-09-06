@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo_list/components/check_box.dart';
@@ -109,69 +110,7 @@ class _TaskItemState extends State<TaskItem> {
             ),
           ],
         ),
-        child: containerToShowTheTask(themeData, priorityColor),
-      ),
-    );
-  }
-
-  Container containerToShowTheTask(ThemeData themeData, priorityColor) {
-    return Container(
-      margin: const EdgeInsets.only(top: 8),
-      padding: const EdgeInsets.only(left: 16),
-      height: TaskItem.height,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(TaskItem.borderRadius),
-        color: themeData.colorScheme.surface,
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 20,
-            color: Colors.black.withOpacity(0.15),
-          ),
-        ],
-      ),
-      child: Row(
-        children: [
-          MyCheckBox(
-            value: widget.task.isCompleted,
-            onTap: () {
-              setState(() {
-                saveData();
-                widget.task.isCompleted = !widget.task.isCompleted;
-                widget.task.save();
-                if (selectAll == false && widget.task.isCompleted == true) {
-                  selectAll = true;
-                } else if (widget.task.isCompleted == false) {
-                  selectAll = false;
-                }
-              });
-            },
-          ),
-          const SizedBox(
-            width: 16,
-          ),
-          Expanded(
-            child: Text(
-              widget.task.name,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                decoration:
-                    widget.task.isCompleted ? TextDecoration.lineThrough : null,
-              ),
-            ),
-          ),
-          Container(
-            width: 20,
-            height: TaskItem.height,
-            decoration: BoxDecoration(
-              color: priorityColor,
-              borderRadius: const BorderRadius.only(
-                topRight: Radius.circular(TaskItem.borderRadius),
-                bottomRight: Radius.circular(TaskItem.borderRadius),
-              ),
-            ),
-          ),
-        ],
+        child: myListTile(themeData, priorityColor),
       ),
     );
   }
@@ -190,6 +129,9 @@ class _TaskItemState extends State<TaskItem> {
             actions: [
               TextButton(
                 onPressed: () {
+                  if (widget.task.notificationId != null) {
+                    AwesomeNotifications().cancel(widget.task.notificationId!);
+                  }
                   Navigator.of(context).pop(true);
                 },
                 child: const Text("Yes"),
@@ -217,6 +159,9 @@ class _TaskItemState extends State<TaskItem> {
             actions: [
               TextButton(
                 onPressed: () {
+                  if (widget.task.notificationId != null) {
+                    AwesomeNotifications().cancel(widget.task.notificationId!);
+                  }
                   setState(() {
                     saveData();
                     widget.task.isCompleted = !widget.task.isCompleted;
@@ -258,6 +203,9 @@ class _TaskItemState extends State<TaskItem> {
           actions: [
             TextButton(
               onPressed: () {
+                if (widget.task.notificationId != null) {
+                  AwesomeNotifications().cancel(widget.task.notificationId!);
+                }
                 widget.task.delete();
                 Navigator.pop(context);
               },
@@ -274,6 +222,58 @@ class _TaskItemState extends State<TaskItem> {
           ],
         );
       },
+    );
+  }
+
+  Widget myListTile(ThemeData themeData, priorityColor) {
+    return Card(
+      elevation: 5,
+      shadowColor: priorityColor,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: ListTile(
+        contentPadding: const EdgeInsets.all(10),
+        leading: MyCheckBox(
+          value: widget.task.isCompleted,
+          onTap: () {
+            if (widget.task.notificationId != null) {
+              AwesomeNotifications().cancel(widget.task.notificationId!);
+            }
+            setState(
+              () {
+                saveData();
+                widget.task.isCompleted = !widget.task.isCompleted;
+                widget.task.save();
+                if (selectAll == false && widget.task.isCompleted == true) {
+                  selectAll = true;
+                } else if (widget.task.isCompleted == false) {
+                  selectAll = false;
+                }
+              },
+            );
+          },
+        ),
+        title: Text(
+          widget.task.name,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            decoration:
+                widget.task.isCompleted ? TextDecoration.lineThrough : null,
+          ),
+        ),
+        trailing: Icon(
+          Icons.flag,
+          size: 25,
+          color: priorityColor,
+        ),
+        subtitle: Text(
+          widget.task.description,
+          style: TextStyle(
+            decoration:
+                widget.task.isCompleted ? TextDecoration.lineThrough : null,
+          ),
+        ),
+      ),
     );
   }
 }
