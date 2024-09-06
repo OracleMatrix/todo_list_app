@@ -1,3 +1,6 @@
+import 'dart:math';
+
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
@@ -14,8 +17,13 @@ class EditTaskScreen extends StatefulWidget {
 }
 
 class _EditTaskScreenState extends State<EditTaskScreen> {
+  int notificationId = Random().nextInt(1000000);
+  late DateTime selectedDate = DateTime.now();
+  late TimeOfDay selectedTime = TimeOfDay.now();
   late final TextEditingController controller =
       TextEditingController(text: widget.task.name);
+  late final TextEditingController desController =
+      TextEditingController(text: widget.task.description);
 
   @override
   Widget build(BuildContext context) {
@@ -30,23 +38,84 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
         child: Column(
           children: [
             _flexForPriorityBoxes(),
-            const SizedBox(
-              height: 16,
-            ),
+            const SizedBox(height: 25),
             TextField(
               controller: controller,
               decoration: InputDecoration(
-                border: const UnderlineInputBorder(
+                border: const OutlineInputBorder(
                   borderRadius: BorderRadius.all(
                     Radius.circular(10),
                   ),
                 ),
-                hintText: "Add a task for today...",
+                labelText: "Title",
                 hintStyle: Theme.of(context).textTheme.bodyMedium!.apply(
                       fontSizeFactor: 1.2,
                     ),
               ),
             ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: desController,
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10),
+                  ),
+                ),
+                labelText: "Description",
+                hintStyle: Theme.of(context).textTheme.bodyMedium!.apply(
+                      fontSizeFactor: 1.2,
+                    ),
+              ),
+            ),
+            const SizedBox(height: 30),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                MaterialButton(
+                  color: Colors.deepPurpleAccent,
+                  onPressed: () async {
+                    final DateTime? pickedDate = await showDatePicker(
+                      context: context,
+                      initialDate: selectedDate,
+                      firstDate: DateTime.now(),
+                      lastDate: DateTime(2100),
+                    );
+                    if (pickedDate != null) {
+                      setState(() {
+                        selectedDate = pickedDate;
+                      });
+                    }
+                  },
+                  child: const Text(
+                    "Choose a date",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                MaterialButton(
+                  color: Colors.deepPurpleAccent,
+                  onPressed: () async {
+                    final TimeOfDay? pickedTime = await showTimePicker(
+                      context: context,
+                      initialTime: selectedTime,
+                    );
+                    if (pickedTime != null) {
+                      setState(() {
+                        selectedTime = pickedTime;
+                      });
+                    }
+                  },
+                  child: const Text(
+                    "Choose a Time",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            )
           ],
         ),
       ),
@@ -109,15 +178,64 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   FloatingActionButton _floatingActionButton(BuildContext context) {
     return FloatingActionButton.extended(
       onPressed: () {
-        widget.task.name = controller.text;
-        widget.task.priority = widget.task.priority;
-        if (widget.task.isInBox) {
-          widget.task.save();
+        if (controller.text.isNotEmpty && desController.text.isNotEmpty) {
+          widget.task.name = controller.text;
+          widget.task.description = desController.text;
+          widget.task.priority = widget.task.priority;
+          if (widget.task.notificationId != null) {
+            AwesomeNotifications().cancel(widget.task.notificationId!);
+          }
+          AwesomeNotifications()
+              .createNotification(
+            content: NotificationContent(
+              id: notificationId,
+              channelKey: 'scheduled_channel',
+              title: widget.task.name,
+              body: widget.task.description,
+              notificationLayout: NotificationLayout.BigText,
+            ),
+            schedule: NotificationCalendar(
+              allowWhileIdle: true,
+              day: selectedDate.day,
+              month: selectedDate.month,
+              year: selectedDate.year,
+              hour: selectedTime.hour,
+              minute: selectedTime.minute,
+              second: 0,
+              millisecond: 0,
+            ),
+          )
+              .then(
+            (value) {
+              if (value) {
+                widget.task.notificationId = notificationId;
+                if (widget.task.isInBox) {
+                  widget.task.save();
+                } else {
+                  final Box<TaskEntity> box = Hive.box(taskBoxName);
+                  box.add(widget.task);
+                }
+              } else {
+                widget.task.notificationId = notificationId;
+                if (widget.task.isInBox) {
+                  widget.task.save();
+                } else {
+                  final Box<TaskEntity> box = Hive.box(taskBoxName);
+                  box.add(widget.task);
+                }
+              }
+            },
+          );
+
+          Navigator.pop(context);
         } else {
-          final Box<TaskEntity> box = Hive.box(taskBoxName);
-          box.add(widget.task);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              backgroundColor: Colors.red,
+              content: Text("Title and Description cannot be empty!"),
+            ),
+          );
         }
-        Navigator.pop(context);
       },
       label: Row(
         children: [
