@@ -10,17 +10,18 @@ const taskBoxName = "tasks";
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   AwesomeNotifications().initialize(
-    'todo_icon',
+    null,
     [
       NotificationChannel(
         channelKey: 'scheduled_channel',
         channelName: 'Scheduled notifications',
         channelDescription: 'Notifications scheduled by the user',
-        defaultColor: const Color(0xFF9F9F9F),
-        ledColor: Colors.white,
+        defaultColor: Colors.deepPurpleAccent,
+        ledColor: Colors.deepPurpleAccent,
         playSound: true,
         enableVibration: true,
-        icon: 'todo_icon',
+        channelShowBadge: true,
+        importance: NotificationImportance.High,
       ),
     ],
   );
