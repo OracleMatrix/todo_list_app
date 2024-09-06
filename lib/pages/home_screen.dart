@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -107,7 +108,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     } else {
                       final TaskEntity task = items[index - 1];
-                      // ignore: avoid_unnecessary_containers
                       return TaskItem(task: task);
                     }
                   },
@@ -197,6 +197,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (selectAll) {
                         for (var task in box.values) {
                           task.isCompleted = true;
+                          if (task.notificationId != null) {
+                            AwesomeNotifications().cancel(task.notificationId!);
+                          }
                           task.save(); // Add this line to save the task
                         }
                       } else {
