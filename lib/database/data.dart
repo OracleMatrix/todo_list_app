@@ -13,6 +13,8 @@ class TaskEntity extends HiveObject {
   Priority priority = Priority.low;
   @HiveField(4)
   int? notificationId;
+  @HiveField(5)
+  DateTime? notificationTime;
 }
 
 @HiveType(typeId: 1)
