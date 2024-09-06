@@ -1,3 +1,4 @@
+import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,6 +9,26 @@ import 'package:todo_list/pages/home_screen.dart';
 const taskBoxName = "tasks";
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  AwesomeNotifications().initialize(
+    'todo_icon',
+    [
+      NotificationChannel(
+        channelKey: 'scheduled_channel',
+        channelName: 'Scheduled notifications',
+        channelDescription: 'Notifications scheduled by the user',
+        defaultColor: const Color(0xFF9F9F9F),
+        ledColor: Colors.white,
+        playSound: true,
+        enableVibration: true,
+        icon: 'todo_icon',
+      ),
+    ],
+  );
+  AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+    if (!isAllowed) {
+      AwesomeNotifications().requestPermissionToSendNotifications();
+    }
+  });
   await Hive.initFlutter();
   Hive.registerAdapter(TaskEntityAdapter());
   Hive.registerAdapter(PriorityAdapter());
