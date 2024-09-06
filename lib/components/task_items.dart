@@ -257,6 +257,7 @@ class _TaskItemState extends State<TaskItem> {
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
           style: TextStyle(
+            fontWeight: FontWeight.bold,
             decoration:
                 widget.task.isCompleted ? TextDecoration.lineThrough : null,
           ),
@@ -266,12 +267,21 @@ class _TaskItemState extends State<TaskItem> {
           size: 25,
           color: priorityColor,
         ),
-        subtitle: Text(
-          widget.task.description,
-          style: TextStyle(
-            decoration:
-                widget.task.isCompleted ? TextDecoration.lineThrough : null,
-          ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.task.description,
+              style: TextStyle(
+                color: Colors.black,
+                decoration:
+                    widget.task.isCompleted ? TextDecoration.lineThrough : null,
+              ),
+            ),
+            Text(
+              "Scheduled at : ${widget.task.notificationTime!.month}-${widget.task.notificationTime!.day} | ${widget.task.notificationTime!.hour}:${widget.task.notificationTime!.minute}",
+            ),
+          ],
         ),
       ),
     );
