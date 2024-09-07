@@ -22,13 +22,16 @@ class TaskEntityAdapter extends TypeAdapter<TaskEntity> {
       ..isCompleted = fields[2] as bool
       ..priority = fields[3] as Priority
       ..notificationId = fields[4] as int?
-      ..notificationTime = fields[5] as DateTime?;
+      ..notificationTime = fields[5] as DateTime?
+      ..alarmTime = fields[6] as DateTime?
+      ..time = fields[7] as TimeOfDay?
+      ..alarmId = fields[8] as int?;
   }
 
   @override
   void write(BinaryWriter writer, TaskEntity obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.name)
       ..writeByte(1)
@@ -40,7 +43,13 @@ class TaskEntityAdapter extends TypeAdapter<TaskEntity> {
       ..writeByte(4)
       ..write(obj.notificationId)
       ..writeByte(5)
-      ..write(obj.notificationTime);
+      ..write(obj.notificationTime)
+      ..writeByte(6)
+      ..write(obj.alarmTime)
+      ..writeByte(7)
+      ..write(obj.time)
+      ..writeByte(8)
+      ..write(obj.alarmId);
   }
 
   @override
@@ -94,6 +103,34 @@ class PriorityAdapter extends TypeAdapter<Priority> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is PriorityAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class TimeOfDayAdapter extends TypeAdapter<TimeOfDay> {
+  @override
+  final int typeId = 2; // Choose a unique typeId
+
+  @override
+  TimeOfDay read(BinaryReader reader) {
+    final hour = reader.readInt();
+    final minute = reader.readInt();
+    return TimeOfDay(hour: hour, minute: minute);
+  }
+
+  @override
+  void write(BinaryWriter writer, TimeOfDay obj) {
+    writer.writeInt(obj.hour);
+    writer.writeInt(obj.minute);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is TimeOfDayAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

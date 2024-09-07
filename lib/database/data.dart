@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:hive_flutter/adapters.dart';
 part 'data.g.dart';
 
@@ -15,6 +16,12 @@ class TaskEntity extends HiveObject {
   int? notificationId;
   @HiveField(5)
   DateTime? notificationTime;
+  @HiveField(6)
+  DateTime? alarmTime;
+  @HiveField(7)
+  TimeOfDay? time;
+  @HiveField(8)
+  int? alarmId;
 }
 
 @HiveType(typeId: 1)
