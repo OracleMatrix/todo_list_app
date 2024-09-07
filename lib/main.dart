@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/adapters.dart';
-import 'package:todo_list/database/data.dart';
+import 'package:todo_list/database/data.dart' as db;
 import 'package:todo_list/pages/home_screen.dart';
 
 const taskBoxName = "tasks";
@@ -31,9 +31,10 @@ void main() async {
     }
   });
   await Hive.initFlutter();
-  Hive.registerAdapter(TaskEntityAdapter());
-  Hive.registerAdapter(PriorityAdapter());
-  await Hive.openBox<TaskEntity>(taskBoxName);
+  Hive.registerAdapter(TimeOfDayAdapter());
+  Hive.registerAdapter(db.TaskEntityAdapter());
+  Hive.registerAdapter(db.PriorityAdapter());
+  await Hive.openBox<db.TaskEntity>(taskBoxName);
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(statusBarColor: primaryVariant),
   );
