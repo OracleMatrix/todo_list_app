@@ -1,8 +1,8 @@
 import 'dart:math';
-
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_alarm_clock/flutter_alarm_clock.dart';
 import 'package:hive_flutter/adapters.dart';
 import 'package:todo_list/database/data.dart';
 import 'package:todo_list/main.dart';
@@ -18,13 +18,14 @@ class EditTaskScreen extends StatefulWidget {
 
 class _EditTaskScreenState extends State<EditTaskScreen> {
   int notificationId = Random().nextInt(1000000);
+  int alarmID = Random().nextInt(1000000);
   late DateTime selectedDate = DateTime.now();
   late TimeOfDay selectedTime = TimeOfDay.now();
   late final TextEditingController controller =
       TextEditingController(text: widget.task.name);
   late final TextEditingController desController =
       TextEditingController(text: widget.task.description);
-
+  String reminderType = 'Alarm';
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
@@ -115,7 +116,34 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
                   ),
                 ),
               ],
-            )
+            ),
+            const SizedBox(height: 16),
+            DropdownButton(
+              dropdownColor: Colors.deepPurpleAccent,
+              borderRadius: BorderRadius.circular(12),
+              iconEnabledColor: Colors.deepPurpleAccent,
+              iconSize: 30,
+              value: reminderType,
+              onChanged: (value) {
+                setState(() {
+                  reminderType = value!;
+                });
+              },
+              items: const [
+                DropdownMenuItem(
+                  value: "Alarm",
+                  child: Text("Remind by Alarm"),
+                ),
+                DropdownMenuItem(
+                  value: "Notification",
+                  child: Text("Remind by Notification"),
+                ),
+                DropdownMenuItem(
+                  value: "None",
+                  child: Text("Don't remind me!"),
+                ),
+              ],
+            ),
           ],
         ),
       ),
@@ -179,71 +207,104 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
     return FloatingActionButton.extended(
       onPressed: () {
         if (controller.text.isNotEmpty && desController.text.isNotEmpty) {
-          widget.task.name = controller.text;
-          widget.task.description = desController.text;
-          widget.task.priority = widget.task.priority;
-          if (widget.task.notificationId != null) {
-            AwesomeNotifications().cancel(widget.task.notificationId!);
-          }
-          AwesomeNotifications()
-              .createNotification(
-            content: NotificationContent(
-              id: notificationId,
-              channelKey: 'scheduled_channel',
-              title: widget.task.name,
-              body: widget.task.description,
-              wakeUpScreen: true,
-              notificationLayout: NotificationLayout.BigText,
-              color: Colors.deepPurpleAccent,
-              backgroundColor: Colors.deepPurpleAccent,
-              actionType: ActionType.KeepOnTop,
-            ),
-            schedule: NotificationCalendar(
-              allowWhileIdle: true,
-              day: selectedDate.day,
-              month: selectedDate.month,
-              year: selectedDate.year,
+          if (reminderType == "Alarm") {
+            widget.task.name = controller.text;
+            widget.task.description = desController.text;
+            widget.task.priority = widget.task.priority;
+            widget.task.alarmTime = selectedDate;
+            widget.task.time = selectedTime;
+            FlutterAlarmClock.createAlarm(
               hour: selectedTime.hour,
-              minute: selectedTime.minute,
-              second: 0,
-              millisecond: 0,
-            ),
-          )
-              .then(
-            (value) {
-              if (value) {
-                widget.task.notificationTime = DateTime(
-                  selectedDate.year,
-                  selectedDate.month,
-                  selectedDate.day,
-                  selectedTime.hour,
-                  selectedTime.minute,
-                );
-                widget.task.notificationId = notificationId;
-                if (widget.task.isInBox) {
-                  widget.task.save();
+              minutes: selectedTime.minute,
+              title: widget.task.description,
+            );
+
+            if (widget.task.isInBox) {
+              widget.task.save();
+            } else {
+              final Box<TaskEntity> box = Hive.box(taskBoxName);
+              box.add(widget.task);
+            }
+          } else if (reminderType == "Notification") {
+            widget.task.name = controller.text;
+            widget.task.description = desController.text;
+            widget.task.priority = widget.task.priority;
+            widget.task.notificationTime = selectedDate;
+            widget.task.notificationId = notificationId;
+            if (widget.task.notificationId != null) {
+              AwesomeNotifications().cancel(widget.task.notificationId!);
+            }
+            AwesomeNotifications()
+                .createNotification(
+              content: NotificationContent(
+                id: notificationId,
+                channelKey: 'scheduled_channel',
+                title: widget.task.name,
+                body: widget.task.description,
+                wakeUpScreen: true,
+                notificationLayout: NotificationLayout.BigText,
+                color: Colors.deepPurpleAccent,
+                backgroundColor: Colors.deepPurpleAccent,
+                actionType: ActionType.KeepOnTop,
+              ),
+              schedule: NotificationCalendar(
+                allowWhileIdle: true,
+                day: selectedDate.day,
+                month: selectedDate.month,
+                year: selectedDate.year,
+                hour: selectedTime.hour,
+                minute: selectedTime.minute,
+                second: 0,
+                millisecond: 0,
+              ),
+            )
+                .then(
+              (value) {
+                if (value) {
+                  widget.task.notificationTime = DateTime(
+                    selectedDate.year,
+                    selectedDate.month,
+                    selectedDate.day,
+                    selectedTime.hour,
+                    selectedTime.minute,
+                  );
+                  widget.task.notificationId = notificationId;
+                  if (widget.task.isInBox) {
+                    widget.task.save();
+                  } else {
+                    final Box<TaskEntity> box = Hive.box(taskBoxName);
+                    box.add(widget.task);
+                  }
                 } else {
-                  final Box<TaskEntity> box = Hive.box(taskBoxName);
-                  box.add(widget.task);
+                  widget.task.notificationTime = DateTime(
+                    selectedDate.year,
+                    selectedDate.month,
+                    selectedDate.day,
+                    selectedTime.hour,
+                    selectedTime.minute,
+                  );
+                  widget.task.notificationId = notificationId;
+                  if (widget.task.isInBox) {
+                    widget.task.save();
+                  } else {
+                    final Box<TaskEntity> box = Hive.box(taskBoxName);
+                    box.add(widget.task);
+                  }
                 }
-              } else {
-                widget.task.notificationTime = DateTime(
-                  selectedDate.year,
-                  selectedDate.month,
-                  selectedDate.day,
-                  selectedTime.hour,
-                  selectedTime.minute,
-                );
-                widget.task.notificationId = notificationId;
-                if (widget.task.isInBox) {
-                  widget.task.save();
-                } else {
-                  final Box<TaskEntity> box = Hive.box(taskBoxName);
-                  box.add(widget.task);
-                }
-              }
-            },
-          );
+              },
+            );
+          } else if (reminderType == "None") {
+            // Create a task item without creating any reminder
+            widget.task.name = controller.text;
+            widget.task.description = desController.text;
+            widget.task.priority = widget.task.priority;
+            if (widget.task.isInBox) {
+              widget.task.save();
+            } else {
+              final Box<TaskEntity> box = Hive.box(taskBoxName);
+              box.add(widget.task);
+            }
+          }
 
           Navigator.pop(context);
         } else {
