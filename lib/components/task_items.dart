@@ -267,22 +267,34 @@ class _TaskItemState extends State<TaskItem> {
           size: 25,
           color: priorityColor,
         ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              widget.task.description,
-              style: TextStyle(
-                color: Colors.black,
-                decoration:
-                    widget.task.isCompleted ? TextDecoration.lineThrough : null,
-              ),
-            ),
-            Text(
-              "Scheduled at : ${widget.task.notificationTime!.month}-${widget.task.notificationTime!.day} | ${widget.task.notificationTime!.hour}:${widget.task.notificationTime!.minute}",
-            ),
-          ],
-        ),
+        subtitle:
+            widget.task.notificationTime != null || widget.task.time != null
+                ? Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.task.description,
+                        style: TextStyle(
+                          color: Colors.black,
+                          decoration: widget.task.isCompleted
+                              ? TextDecoration.lineThrough
+                              : null,
+                        ),
+                      ),
+                      Text(
+                        "Scheduled at : ${widget.task.alarmTime != null ? widget.task.alarmTime!.month : widget.task.notificationTime!.month}-${widget.task.alarmTime != null ? widget.task.alarmTime!.day : widget.task.notificationTime!.day} | ${widget.task.time != null ? widget.task.time!.hour : widget.task.notificationTime!.hour}:${widget.task.time != null ? widget.task.time!.minute : widget.task.notificationTime!.minute}",
+                      ),
+                    ],
+                  )
+                : Text(
+                    widget.task.description,
+                    style: TextStyle(
+                      color: Colors.black,
+                      decoration: widget.task.isCompleted
+                          ? TextDecoration.lineThrough
+                          : null,
+                    ),
+                  ),
       ),
     );
   }
