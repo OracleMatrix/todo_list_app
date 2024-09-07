@@ -6,6 +6,7 @@ A simple and pretty Todo List app built with Flutter.
 * Prioritize tasks with high, normal, and low priority levels
 * Hive and SharedPrefrences database to store tasks and states
 * Scheduled Notification
+* Scheduled Alarms
 * Mark tasks as completed
 * Search for tasks by name
 * Delete individual tasks or all tasks at once
@@ -15,6 +16,8 @@ A simple and pretty Todo List app built with Flutter.
 * Hold on tasks to delete
 * Edit existing tasks
 * Empty state
+
+## Alarm and Notification added
 
 ## Screenshots
 ![alt text](Screenshot_1723662047.png)
@@ -27,7 +30,9 @@ A simple and pretty Todo List app built with Flutter.
 
 ![alt text](Screenshot_1725635163.png)
 
-![alt text](Screenshot_1725634832.png)
+![alt text](Screenshot_1725734418.png)
+
+![alt text](Screenshot_1725734422.png)
 
 ![alt text](Screenshot_1725635211.png)
 
