@@ -16,6 +16,7 @@ A simple and pretty Todo List app built with Flutter.
 * Hold on tasks to delete
 * Edit existing tasks
 * Empty state
+* Dark mode theme
 
 ## Alarm and Notification added
 
@@ -23,6 +24,8 @@ A simple and pretty Todo List app built with Flutter.
 ![alt text](Screenshot_1723662047.png)
 
 ![alt text](Screenshot_1725635061.png)
+
+![darkmode.png](darkmode.png)
 
 ![alt text](Screenshot_1725635078.png)
 
