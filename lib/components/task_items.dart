@@ -227,6 +227,7 @@ class _TaskItemState extends State<TaskItem> {
 
   Widget myListTile(ThemeData themeData, priorityColor) {
     return Card(
+      margin: const EdgeInsets.all(10),
       elevation: 5,
       shadowColor: priorityColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -275,7 +276,7 @@ class _TaskItemState extends State<TaskItem> {
                       Text(
                         widget.task.description,
                         style: TextStyle(
-                          color: Colors.black,
+                          color: Theme.of(context).colorScheme.inverseSurface,
                           decoration: widget.task.isCompleted
                               ? TextDecoration.lineThrough
                               : null,
@@ -289,7 +290,7 @@ class _TaskItemState extends State<TaskItem> {
                 : Text(
                     widget.task.description,
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Theme.of(context).colorScheme.inverseSurface,
                       decoration: widget.task.isCompleted
                           ? TextDecoration.lineThrough
                           : null,
