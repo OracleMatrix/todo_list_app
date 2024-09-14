@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
   }
 
-  final ValueNotifier<String> searchKeyWordNotifire = ValueNotifier("");
+  final ValueNotifier<String> searchKeyWordNotifier = ValueNotifier("");
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +60,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Expanded _showTasksBoxes(Box<TaskEntity> box, ThemeData themeData) {
     return Expanded(
       child: ValueListenableBuilder<String>(
-        valueListenable: searchKeyWordNotifire,
+        valueListenable: searchKeyWordNotifier,
         builder: (context, value, child) {
           return ValueListenableBuilder<Box<TaskEntity>>(
             valueListenable: box.listenable(),
@@ -126,7 +127,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return MaterialButton(
       elevation: 0,
       textColor: secondaryTextColor,
-      color: const Color(0xffEAEFF5),
+      color: Theme.of(context).colorScheme.inversePrimary,
       onPressed: () {
         showDialog(
           context: context,
@@ -176,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return MaterialButton(
       elevation: 0,
       textColor: secondaryTextColor,
-      color: const Color(0xffEAEFF5),
+      color: Theme.of(context).colorScheme.inversePrimary,
       onPressed: () {
         showDialog(
           context: context,
@@ -242,8 +243,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Container _customAppBar(ThemeData themeData) {
+    final currentTheme = AdaptiveTheme.of(context).mode;
     return Container(
-      height: 110,
+      height: 150,
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
@@ -265,38 +267,34 @@ class _HomeScreenState extends State<HomeScreen> {
                     color: themeData.colorScheme.onPrimary,
                   ),
                 ),
+                IconButton(
+                  onPressed: () {
+                    AdaptiveTheme.of(context).toggleThemeMode();
+                  },
+                  icon: Icon(
+                    currentTheme.isDark ? Icons.sunny : Icons.dark_mode,
+                    color: Colors.white,
+                  ),
+                ),
               ],
             ),
             const SizedBox(
               height: 16,
             ),
-            Container(
-              height: 38,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(19),
-                color: themeData.colorScheme.onPrimary,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
-                    blurRadius: 20,
-                  ),
-                ],
+            SearchBar(
+              elevation: const WidgetStatePropertyAll(0),
+              controller: controller,
+              leading: const Icon(
+                Icons.search,
+                color: Colors.grey,
               ),
-              child: TextField(
-                onChanged: (value) {
-                  searchKeyWordNotifire.value = controller.text;
-                },
-                controller: controller,
-                decoration: InputDecoration(
-                  prefixIcon: Icon(
-                    CupertinoIcons.search,
-                    color: themeData.inputDecorationTheme.iconColor,
-                  ),
-                  hintText: "Search tasks...",
-                  hintStyle: themeData.inputDecorationTheme.labelStyle,
-                ),
+              hintText: "Search tasks...",
+              hintStyle: const WidgetStatePropertyAll(
+                TextStyle(color: Colors.grey),
               ),
+              onChanged: (value) {
+                searchKeyWordNotifier.value = controller.text;
+              },
             )
           ],
         ),
