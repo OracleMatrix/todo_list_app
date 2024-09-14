@@ -1,3 +1,4 @@
+import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,6 +8,7 @@ import 'package:todo_list/database/data.dart' as db;
 import 'package:todo_list/pages/home_screen.dart';
 
 const taskBoxName = "tasks";
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   AwesomeNotifications().initialize(
@@ -62,16 +64,40 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     const primaryTextColor = Color(0xff1D2830);
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'ToDo App',
-      theme: ThemeData(
+    return AdaptiveTheme(
+      initial: AdaptiveThemeMode.system,
+      light: ThemeData(
+        colorScheme: _colorScheme(primaryTextColor),
         textTheme: _textTheme(),
         inputDecorationTheme: _inputDecorationTheme(),
         useMaterial3: false,
-        colorScheme: _colorScheme(primaryTextColor),
       ),
-      home: const HomeScreen(),
+      dark: ThemeData(
+        colorScheme: _darkColorScheme(primaryTextColor),
+        textTheme: _textTheme(),
+        inputDecorationTheme: _inputDarkDecorationTheme(),
+        useMaterial3: false,
+      ),
+      builder: (light, dark) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'ToDo App',
+        theme: light,
+        darkTheme: dark,
+        home: const HomeScreen(),
+      ),
+    );
+  }
+
+  ColorScheme _darkColorScheme(Color primaryTextColor) {
+    return const ColorScheme.dark(
+      primary: primaryColor,
+      onPrimaryFixedVariant: primaryVariant,
+      surface: Color(0xff303030),
+      inversePrimary: Color(0xff2A2A2A),
+      onSurface: Colors.white,
+      inverseSurface: Colors.white,
+      secondary: primaryColor,
+      onSecondary: Colors.black,
     );
   }
 
@@ -80,6 +106,7 @@ class MyApp extends StatelessWidget {
       primary: primaryColor,
       onPrimaryFixedVariant: primaryVariant,
       surface: const Color(0xffF3F5F8),
+      inverseSurface: Colors.black,
       onSurface: primaryTextColor,
       secondary: primaryColor,
       onSecondary: Colors.white,
@@ -94,6 +121,17 @@ class MyApp extends StatelessWidget {
         color: secondaryTextColor,
       ),
       iconColor: secondaryTextColor,
+    );
+  }
+
+  InputDecorationTheme _inputDarkDecorationTheme() {
+    return const InputDecorationTheme(
+      border: InputBorder.none,
+      contentPadding: EdgeInsets.all(8),
+      labelStyle: TextStyle(
+        color: Colors.grey,
+      ),
+      iconColor: Colors.grey,
     );
   }
 
