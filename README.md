@@ -30,7 +30,7 @@ A simple and pretty Todo List app built with Flutter.
 | Edit/Add Task | Choose Schedule | Choose Date |
 | ![Edit or add a taskscreen](Screenshot_1725734418.png) | ![Choose schedule option](Screenshot_1725734422.png) | ![Choose date](Screenshot_1725635211.png) | 
 | Choose Time |
-| ![Choose time](Screenshot_1725635213.png) |  |  |
+| ![Choose time](Screenshot_1725635213.png) |
 
 
 
