@@ -21,25 +21,25 @@ A simple and pretty Todo List app built with Flutter.
 ## Alarm and Notification added
 
 ## Screenshots
-![alt text](Screenshot_1723662047.png)
+![Empty State](Screenshot_1723662047.png)
 
-![alt text](Screenshot_1725635061.png)
+![Home Screen with tasks](Screenshot_1725635061.png)
 
-![darkmode.png](darkmode.png)
+![Dark mode](darkmode.png)
 
-![alt text](Screenshot_1725635078.png)
+![Search between tasks](Screenshot_1725635078.png)
 
-![alt text](Screenshot_1725635124.png)
+![Dismissible option to delete task](Screenshot_1725635124.png)
 
-![alt text](Screenshot_1725635163.png)
+![Dismissible option to mark as done or unmark](Screenshot_1725635163.png)
 
-![alt text](Screenshot_1725734418.png)
+![Edit or add a task screen](Screenshot_1725734418.png)
 
-![alt text](Screenshot_1725734422.png)
+![Choose schedule option](Screenshot_1725734422.png)
 
-![alt text](Screenshot_1725635211.png)
+![Choose date](Screenshot_1725635211.png)
 
-![alt text](Screenshot_1725635213.png)
+![Choose time](Screenshot_1725635213.png)
 
 
 
