@@ -18,7 +18,7 @@ A simple and pretty Todo List app built with Flutter.
 * Empty state
 * Dark mode theme
 
-## Alarm and Notification added
+**Note:** Alarm and Notification added
 
 ##Screenshots
 
