@@ -269,7 +269,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 IconButton(
                   onPressed: () {
-                    AdaptiveTheme.of(context).toggleThemeMode();
+                    if (AdaptiveTheme.of(context).mode.isDark) {
+                      AdaptiveTheme.of(context).setThemeMode(AdaptiveThemeMode.light);
+                    } else {
+                      AdaptiveTheme.of(context).setThemeMode(AdaptiveThemeMode.dark);
+                    }
                   },
                   icon: Icon(
                     currentTheme.isDark ? Icons.sunny : Icons.dark_mode,
