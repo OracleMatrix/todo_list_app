@@ -20,26 +20,17 @@ A simple and pretty Todo List app built with Flutter.
 
 ## Alarm and Notification added
 
-## Screenshots
-![Empty State](Screenshot_1723662047.png)
+##Screenshots
 
-![Home Screen with tasks](Screenshot_1725635061.png)
-
-![Dark mode](darkmode.png)
-
-![Search between tasks](Screenshot_1725635078.png)
-
-![Dismissible option to delete task](Screenshot_1725635124.png)
-
-![Dismissible option to mark as done or unmark](Screenshot_1725635163.png)
-
-![Edit or add a task screen](Screenshot_1725734418.png)
-
-![Choose schedule option](Screenshot_1725734422.png)
-
-![Choose date](Screenshot_1725635211.png)
-
-![Choose time](Screenshot_1725635213.png)
+| Empty State | Home Screen | Dark Mode |
+|---|---|---|
+| ![Empty State](Screenshot_1723662047.png) | ![Home Screen with tasks](Screenshot_1725635061.png) | ![Dark mode](darkmode.png) |
+| Search | Dismissible (Delete) | Dismissible (Done/Undone) |
+| ![Search between tasks](Screenshot_1725635078.png) | ![Dismissible option to delete task](Screenshot_1725635124.png) | ![Dismissible option to mark as done or unmark](Screenshot_1725635163.png) |
+| Edit/Add Task | Choose Schedule | Choose Date |
+| ![Edit or add a taskscreen](Screenshot_1725734418.png) | ![Choose schedule option](Screenshot_1725734422.png) | ![Choose date](Screenshot_1725635211.png) | 
+| Choose Time |  |  |
+| ![Choose time](Screenshot_1725635213.png) |  |  |
 
 
 
