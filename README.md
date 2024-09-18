@@ -23,7 +23,6 @@ A simple and pretty Todo List app built with Flutter.
 ##Screenshots
 
 | Empty State | Home Screen | Dark Mode |
-|---|---|---|
 | ![Empty State](Screenshot_1723662047.png) | ![Home Screen with tasks](Screenshot_1725635061.png) | ![Dark mode](darkmode.png) |
 | Search | Dismissible (Delete) | Dismissible (Done/Undone) |
 | ![Search between tasks](Screenshot_1725635078.png) | ![Dismissible option to delete task](Screenshot_1725635124.png) | ![Dismissible option to mark as done or unmark](Screenshot_1725635163.png) |
