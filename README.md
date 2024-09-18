@@ -21,7 +21,7 @@ A simple and pretty Todo List app built with Flutter.
 ## Alarm and Notification added
 
 ## Screenshots
-- **![Empty State](Screenshot_1723662047.png)**
+1- ![Empty State](Screenshot_1723662047.png)**
 
 ![Home Screen with tasks](Screenshot_1725635061.png)
 
