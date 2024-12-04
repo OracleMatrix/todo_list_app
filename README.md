@@ -1,7 +1,7 @@
 # Todo List App
 A simple and pretty Todo List app built with Flutter.
 
-## Features
+### Features
 * Create and manage your todo tasks
 * Prioritize tasks with high, normal, and low priority levels
 * Hive and SharedPrefrences database to store tasks and states
@@ -18,44 +18,34 @@ A simple and pretty Todo List app built with Flutter.
 * Empty state
 * Dark mode theme
 
-## Alarm and Notification added
+**Note:** Alarm and Notifications added
 
 ## Screenshots
-![alt text](Screenshot_1723662047.png)
-
-![alt text](Screenshot_1725635061.png)
-
-![darkmode.png](darkmode.png)
-
-![alt text](Screenshot_1725635078.png)
-
-![alt text](Screenshot_1725635124.png)
-
-![alt text](Screenshot_1725635163.png)
-
-![alt text](Screenshot_1725734418.png)
-
-![alt text](Screenshot_1725734422.png)
-
-![alt text](Screenshot_1725635211.png)
-
-![alt text](Screenshot_1725635213.png)
+| Empty State | Home Screen | Dark Mode |
+|---|---|---|
+| ![Empty State](Screenshot_1723662047.png) | ![Home Screen with tasks](Screenshot_1725635061.png) | ![Dark mode](darkmode.png) |
+| Search | Dismissible (Delete) | Dismissible (Done/Undone) |
+| ![Search between tasks](Screenshot_1725635078.png) | ![Dismissible option to delete task](Screenshot_1725635124.png) | ![Dismissible option to mark as done or unmark](Screenshot_1725635163.png) |
+| Edit/Add Task | Choose Schedule | Choose Date |
+| ![Edit or add a taskscreen](Screenshot_1725734418.png) | ![Choose schedule option](Screenshot_1725734422.png) | ![Choose date](Screenshot_1725635211.png) | 
+| Choose Time |
+| ![Choose time](Screenshot_1725635213.png) |
 
 
 
 
 
-## Technical Details
-* Built with Flutter 2.x
-* Uses Hive for local storage
-* Uses Awesome Notifications for sendid local notifications
+### Technical Details
+* Built with `Flutter`
+* Uses `Hive` for local storage
+* Uses `Awesome Notifications` for sendid local notifications
 * Implements a simple and efficient data model using HiveObject and * HiveType
 * Utilizes Flutter's Material Design for a native Android and iOS look and feel
 
-## Getting Started
+### Getting Started
 1. Clone the repository: git clone https://github.com/OracleMatrix/todo_list_app.git
 2. Open the project in your preferred IDE (e.g. Android Studio, Visual Studio Code)
 3. Run the app on an emulator or physical device: flutter run
 
-## Contributing
+### Contributing
 Contributions are welcome! If you'd like to contribute to the app, please fork the repository and submit a pull request.
