@@ -1,9 +1,11 @@
+// ignore_for_file: unnecessary_null_comparison
+
 import 'dart:math';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_alarm_clock/flutter_alarm_clock.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:todo_list/NotificationsService/notification_api.dart';
 import 'package:todo_list/database/data.dart';
 import 'package:todo_list/main.dart';
 
@@ -26,6 +28,20 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
   late final TextEditingController desController =
       TextEditingController(text: widget.task.description);
   String reminderType = 'Alarm';
+
+  DateTime? getScheduledDateTime() {
+    if (selectedDate != null && selectedTime != null) {
+      return DateTime(
+        selectedDate.year,
+        selectedDate.month,
+        selectedDate.day,
+        selectedTime.hour,
+        selectedTime.minute,
+      );
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
@@ -232,64 +248,29 @@ class _EditTaskScreenState extends State<EditTaskScreen> {
             widget.task.notificationTime = selectedDate;
             widget.task.notificationId = notificationId;
             if (widget.task.notificationId != null) {
-              AwesomeNotifications().cancel(widget.task.notificationId!);
+              NotificationsAPI.notification.cancel(widget.task.notificationId!);
             }
-            AwesomeNotifications()
-                .createNotification(
-              content: NotificationContent(
-                id: notificationId,
-                channelKey: 'scheduled_channel',
-                title: widget.task.name,
-                body: widget.task.description,
-                wakeUpScreen: true,
-                notificationLayout: NotificationLayout.BigText,
-                color: Colors.deepPurpleAccent,
-                backgroundColor: Colors.deepPurpleAccent,
-                actionType: ActionType.KeepOnTop,
-              ),
-              schedule: NotificationCalendar(
-                allowWhileIdle: true,
-                day: selectedDate.day,
-                month: selectedDate.month,
-                year: selectedDate.year,
-                hour: selectedTime.hour,
-                minute: selectedTime.minute,
-                second: 0,
-                millisecond: 0,
-              ),
-            )
-                .then(
+
+            NotificationsAPI.showScheduledNotification(
+              scheduledDate: getScheduledDateTime()!,
+              title: widget.task.name,
+              body: widget.task.description,
+              id: notificationId,
+            ).then(
               (value) {
-                if (value) {
-                  widget.task.notificationTime = DateTime(
-                    selectedDate.year,
-                    selectedDate.month,
-                    selectedDate.day,
-                    selectedTime.hour,
-                    selectedTime.minute,
-                  );
-                  widget.task.notificationId = notificationId;
-                  if (widget.task.isInBox) {
-                    widget.task.save();
-                  } else {
-                    final Box<TaskEntity> box = Hive.box(taskBoxName);
-                    box.add(widget.task);
-                  }
+                widget.task.notificationTime = DateTime(
+                  selectedDate.year,
+                  selectedDate.month,
+                  selectedDate.day,
+                  selectedTime.hour,
+                  selectedTime.minute,
+                );
+                widget.task.notificationId = notificationId;
+                if (widget.task.isInBox) {
+                  widget.task.save();
                 } else {
-                  widget.task.notificationTime = DateTime(
-                    selectedDate.year,
-                    selectedDate.month,
-                    selectedDate.day,
-                    selectedTime.hour,
-                    selectedTime.minute,
-                  );
-                  widget.task.notificationId = notificationId;
-                  if (widget.task.isInBox) {
-                    widget.task.save();
-                  } else {
-                    final Box<TaskEntity> box = Hive.box(taskBoxName);
-                    box.add(widget.task);
-                  }
+                  final Box<TaskEntity> box = Hive.box(taskBoxName);
+                  box.add(widget.task);
                 }
               },
             );
@@ -355,6 +336,7 @@ class PriorityCheckBox extends StatelessWidget {
   final Color color;
   final bool isSelected;
   final GestureTapCallback onTap;
+
   const PriorityCheckBox({
     super.key,
     required this.label,
@@ -399,6 +381,7 @@ class PriorityCheckBox extends StatelessWidget {
 class PriorityCheckBoxShape extends StatelessWidget {
   final bool value;
   final Color color;
+
   const PriorityCheckBoxShape(
       {super.key, required this.value, required this.color});
 

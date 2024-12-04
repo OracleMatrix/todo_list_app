@@ -1,37 +1,27 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:todo_list/NotificationsService/notification_api.dart';
 import 'package:todo_list/database/data.dart' as db;
 import 'package:todo_list/pages/home_screen.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:permission_handler/permission_handler.dart';
 
 const taskBoxName = "tasks";
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  AwesomeNotifications().initialize(
-    null,
-    [
-      NotificationChannel(
-        channelKey: 'scheduled_channel',
-        channelName: 'Scheduled notifications',
-        channelDescription: 'Notifications scheduled by the user',
-        defaultColor: Colors.deepPurpleAccent,
-        ledColor: Colors.deepPurpleAccent,
-        playSound: true,
-        enableVibration: true,
-        channelShowBadge: true,
-        importance: NotificationImportance.High,
-      ),
-    ],
+  await NotificationsAPI.init();
+  tz.initializeTimeZones();
+  Permission.notification.isDenied.then(
+    (value) {
+      if (value) {
+        Permission.notification.request();
+      }
+    },
   );
-  AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-    if (!isAllowed) {
-      AwesomeNotifications().requestPermissionToSendNotifications();
-    }
-  });
   await Hive.initFlutter();
   Hive.registerAdapter(TimeOfDayAdapter());
   Hive.registerAdapter(db.TaskEntityAdapter());
@@ -40,7 +30,6 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(
     const SystemUiOverlayStyle(statusBarColor: primaryVariant),
   );
-  WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations(
     [
       DeviceOrientation.portraitUp,

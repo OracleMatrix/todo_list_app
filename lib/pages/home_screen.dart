@@ -1,9 +1,9 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo_list/NotificationsService/notification_api.dart';
 import 'package:todo_list/components/task_items.dart';
 import 'package:todo_list/database/data.dart';
 import 'package:todo_list/main.dart';
@@ -199,7 +199,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         for (var task in box.values) {
                           task.isCompleted = true;
                           if (task.notificationId != null) {
-                            AwesomeNotifications().cancel(task.notificationId!);
+                            NotificationsAPI.notification
+                                .cancel(task.notificationId!);
                           }
                           task.save(); // Add this line to save the task
                         }
@@ -270,9 +271,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 IconButton(
                   onPressed: () {
                     if (AdaptiveTheme.of(context).mode.isDark) {
-                      AdaptiveTheme.of(context).setThemeMode(AdaptiveThemeMode.light);
+                      AdaptiveTheme.of(context)
+                          .setThemeMode(AdaptiveThemeMode.light);
                     } else {
-                      AdaptiveTheme.of(context).setThemeMode(AdaptiveThemeMode.dark);
+                      AdaptiveTheme.of(context)
+                          .setThemeMode(AdaptiveThemeMode.dark);
                     }
                   },
                   icon: Icon(

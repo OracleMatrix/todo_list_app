@@ -1,6 +1,6 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:todo_list/NotificationsService/notification_api.dart';
 import 'package:todo_list/components/check_box.dart';
 import 'package:todo_list/database/data.dart';
 import 'package:todo_list/main.dart';
@@ -130,7 +130,7 @@ class _TaskItemState extends State<TaskItem> {
               TextButton(
                 onPressed: () {
                   if (widget.task.notificationId != null) {
-                    AwesomeNotifications().cancel(widget.task.notificationId!);
+                    NotificationsAPI.notification.cancel(widget.task.notificationId!);
                   }
                   Navigator.of(context).pop(true);
                 },
@@ -160,7 +160,7 @@ class _TaskItemState extends State<TaskItem> {
               TextButton(
                 onPressed: () {
                   if (widget.task.notificationId != null) {
-                    AwesomeNotifications().cancel(widget.task.notificationId!);
+                    NotificationsAPI.notification.cancel(widget.task.notificationId!);
                   }
                   setState(() {
                     saveData();
@@ -204,7 +204,7 @@ class _TaskItemState extends State<TaskItem> {
             TextButton(
               onPressed: () {
                 if (widget.task.notificationId != null) {
-                  AwesomeNotifications().cancel(widget.task.notificationId!);
+                  NotificationsAPI.notification.cancel(widget.task.notificationId!);
                 }
                 widget.task.delete();
                 Navigator.pop(context);
@@ -237,7 +237,7 @@ class _TaskItemState extends State<TaskItem> {
           value: widget.task.isCompleted,
           onTap: () {
             if (widget.task.notificationId != null) {
-              AwesomeNotifications().cancel(widget.task.notificationId!);
+              NotificationsAPI.notification.cancel(widget.task.notificationId!);
             }
             setState(
               () {
