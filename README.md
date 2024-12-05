@@ -19,6 +19,7 @@ A simple and pretty Todo List app built with Flutter.
 * Dark mode theme
 
 **Note:** Alarm and Notifications added
+---
 
 ## Screenshots
 | Empty State | Home Screen | Dark Mode |
@@ -38,7 +39,8 @@ A simple and pretty Todo List app built with Flutter.
 ### Technical Details
 * Built with `Flutter`
 * Uses `Hive` for local storage
-* Uses `Awesome Notifications` for sendid local notifications
+* Uses `flutter local notifications` for sendid local notifications
+* Uses `Provider` for state management
 * Implements a simple and efficient data model using HiveObject and * HiveType
 * Utilizes Flutter's Material Design for a native Android and iOS look and feel
 
