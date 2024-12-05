@@ -3,7 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/adapters.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_list/NotificationsService/notification_api.dart';
+import 'package:todo_list/Providers/edit_screen_provider.dart';
+import 'package:todo_list/Providers/home_screen_provider.dart';
 import 'package:todo_list/database/data.dart' as db;
 import 'package:todo_list/pages/home_screen.dart';
 import 'package:timezone/data/latest.dart' as tz;
@@ -36,7 +39,19 @@ void main() async {
       DeviceOrientation.portraitDown,
     ],
   );
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => EditScreenProvider(),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => HomeScreenProvider(),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 const Color primaryColor = Color(0xff794CFF);
@@ -134,5 +149,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-
-bool selectAll = false;

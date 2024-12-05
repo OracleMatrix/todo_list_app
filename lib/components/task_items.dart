@@ -1,38 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_list/NotificationsService/notification_api.dart';
 import 'package:todo_list/components/check_box.dart';
 import 'package:todo_list/database/data.dart';
 import 'package:todo_list/main.dart';
 import 'package:todo_list/pages/edit.screen.dart';
 
+import '../Providers/home_screen_provider.dart';
+
 class TaskItem extends StatefulWidget {
+  final TaskEntity task;
   static const double height = 74;
   static const double borderRadius = 8;
+
   const TaskItem({
     super.key,
     required this.task,
   });
-
-  final TaskEntity task;
 
   @override
   State<TaskItem> createState() => _TaskItemState();
 }
 
 class _TaskItemState extends State<TaskItem> {
-  saveData() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    await preferences.setBool("selectAllButton", selectAll);
-  }
-
-  loadData() async {
-    SharedPreferences preferences = await SharedPreferences.getInstance();
-    setState(() {
-      selectAll = preferences.getBool("selectAllButton") ?? false;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final ThemeData themeData = Theme.of(context);
@@ -58,7 +48,9 @@ class _TaskItemState extends State<TaskItem> {
       onTap: () {
         Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => EditTaskScreen(task: widget.task),
+            builder: (context) => EditTaskScreen(
+              task: widget.task,
+            ),
           ),
         );
       },
@@ -66,16 +58,9 @@ class _TaskItemState extends State<TaskItem> {
         confirmDismiss: (direction) async {
           return await showDialogForConfirmDismiss(context, direction);
         },
-        onDismissed: (direction) {
-          if (direction == DismissDirection.endToStart) {
-            widget.task.delete();
-          } else {
-            setState(() {
-              widget.task.isCompleted = !widget.task.isCompleted;
-              widget.task.save();
-            });
-          }
-        },
+        onDismissed: (direction) =>
+            Provider.of<HomeScreenProvider>(context, listen: false)
+                .onDismiss(direction, widget.task),
         key: Key(widget.task.name),
         secondaryBackground: const Row(
           mainAxisAlignment: MainAxisAlignment.end,
@@ -130,7 +115,8 @@ class _TaskItemState extends State<TaskItem> {
               TextButton(
                 onPressed: () {
                   if (widget.task.notificationId != null) {
-                    NotificationsAPI.notification.cancel(widget.task.notificationId!);
+                    NotificationsAPI.notification
+                        .cancel(widget.task.notificationId!);
                   }
                   Navigator.of(context).pop(true);
                 },
@@ -158,22 +144,9 @@ class _TaskItemState extends State<TaskItem> {
                 : "Set as Done"),
             actions: [
               TextButton(
-                onPressed: () {
-                  if (widget.task.notificationId != null) {
-                    NotificationsAPI.notification.cancel(widget.task.notificationId!);
-                  }
-                  setState(() {
-                    saveData();
-                    widget.task.isCompleted = !widget.task.isCompleted;
-                    widget.task.save();
-                    if (selectAll == false && widget.task.isCompleted == true) {
-                      selectAll = true;
-                    } else if (widget.task.isCompleted == false) {
-                      selectAll = false;
-                    }
-                  });
-                  Navigator.of(context).pop();
-                },
+                onPressed: () =>
+                    Provider.of<HomeScreenProvider>(context, listen: false)
+                        .markAsDone(context, widget.task),
                 child: const Text("Yes"),
               ),
               TextButton(
@@ -204,7 +177,8 @@ class _TaskItemState extends State<TaskItem> {
             TextButton(
               onPressed: () {
                 if (widget.task.notificationId != null) {
-                  NotificationsAPI.notification.cancel(widget.task.notificationId!);
+                  NotificationsAPI.notification
+                      .cancel(widget.task.notificationId!);
                 }
                 widget.task.delete();
                 Navigator.pop(context);
@@ -231,49 +205,35 @@ class _TaskItemState extends State<TaskItem> {
       elevation: 5,
       shadowColor: priorityColor,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-      child: ListTile(
-        contentPadding: const EdgeInsets.all(10),
-        leading: MyCheckBox(
-          value: widget.task.isCompleted,
-          onTap: () {
-            if (widget.task.notificationId != null) {
-              NotificationsAPI.notification.cancel(widget.task.notificationId!);
-            }
-            setState(
-              () {
-                saveData();
-                widget.task.isCompleted = !widget.task.isCompleted;
-                widget.task.save();
-                if (selectAll == false && widget.task.isCompleted == true) {
-                  selectAll = true;
-                } else if (widget.task.isCompleted == false) {
-                  selectAll = false;
-                }
-              },
-            );
-          },
-        ),
-        title: Text(
-          widget.task.name,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            decoration:
-                widget.task.isCompleted ? TextDecoration.lineThrough : null,
+      child: Consumer<HomeScreenProvider>(
+        builder: (context, value, child) => ListTile(
+          contentPadding: const EdgeInsets.all(10),
+          leading: MyCheckBox(
+            value: widget.task.isCompleted,
+            onTap: () => value.listTileOptions(context, widget.task),
           ),
-        ),
-        trailing: Icon(
-          Icons.flag,
-          size: 25,
-          color: priorityColor,
-        ),
-        subtitle:
-            widget.task.notificationTime != null || widget.task.time != null
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
+          title: Text(
+            widget.task.name,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              decoration:
+                  widget.task.isCompleted ? TextDecoration.lineThrough : null,
+            ),
+          ),
+          trailing: Icon(
+            Icons.flag,
+            size: 25,
+            color: priorityColor,
+          ),
+          subtitle: widget.task.notificationTime != null ||
+                  widget.task.time != null
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Consumer<HomeScreenProvider>(
+                      builder: (context, value, child) => Text(
                         widget.task.description,
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.inverseSurface,
@@ -282,20 +242,22 @@ class _TaskItemState extends State<TaskItem> {
                               : null,
                         ),
                       ),
-                      Text(
-                        "Scheduled at : ${widget.task.alarmTime != null ? widget.task.alarmTime!.month : widget.task.notificationTime!.month}-${widget.task.alarmTime != null ? widget.task.alarmTime!.day : widget.task.notificationTime!.day} | ${widget.task.time != null ? widget.task.time!.hour : widget.task.notificationTime!.hour}:${widget.task.time != null ? widget.task.time!.minute : widget.task.notificationTime!.minute}",
-                      ),
-                    ],
-                  )
-                : Text(
-                    widget.task.description,
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.inverseSurface,
-                      decoration: widget.task.isCompleted
-                          ? TextDecoration.lineThrough
-                          : null,
                     ),
+                    Text(
+                      "Scheduled at : ${widget.task.alarmTime != null ? widget.task.alarmTime!.month : widget.task.notificationTime!.month}-${widget.task.alarmTime != null ? widget.task.alarmTime!.day : widget.task.notificationTime!.day} | ${widget.task.time != null ? widget.task.time!.hour : widget.task.notificationTime!.hour}:${widget.task.time != null ? widget.task.time!.minute : widget.task.notificationTime!.minute}",
+                    ),
+                  ],
+                )
+              : Text(
+                  widget.task.description,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.inverseSurface,
+                    decoration: widget.task.isCompleted
+                        ? TextDecoration.lineThrough
+                        : null,
                   ),
+                ),
+        ),
       ),
     );
   }
